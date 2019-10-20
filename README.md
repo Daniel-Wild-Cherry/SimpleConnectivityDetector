@@ -23,16 +23,16 @@ allprojects {
 
 ```groovy
 dependencies {
-    implementation 'com.github.cherrydaniel:SimpleConnectivityDetector:VERSION'
+    implementation 'com.github.cherrydaniel:SimpleConnectivityDetector:x.y.z'
 }
 ```
 
-`VERSION` being [![](https://jitpack.io/v/cherrydaniel/SimpleConnectivityDetector.svg)](https://jitpack.io/#cherrydaniel/SimpleConnectivityDetector)
+`x.y.z` being [![](https://jitpack.io/v/cherrydaniel/SimpleConnectivityDetector.svg)](https://jitpack.io/#cherrydaniel/SimpleConnectivityDetector)
 
 ## Usage
 
 There are multiple ways to use SimpleConnectivityDetector.
-The most straightforward way is to use the `[ConnectivityDetector](simpleconnectivitydetector/src/main/java/com/wildcherryapps/simpleconnectivitydetector/ConnectivityDetector.java)` `bind` static method with a `[ConnectivityListener](simpleconnectivitydetector/src/main/java/com/wildcherryapps/simpleconnectivitydetector/ConnectivityListener.java)` callback.
+The most straightforward way is to use the [`ConnectivityDetector`](simpleconnectivitydetector/src/main/java/com/wildcherryapps/simpleconnectivitydetector/ConnectivityDetector.java) `bind()` static method with a [`ConnectivityListener`](simpleconnectivitydetector/src/main/java/com/wildcherryapps/simpleconnectivitydetector/ConnectivityListener.java) callback.
 
 In your Activity's or Fragment's onCreate method:
 ```java
@@ -56,11 +56,24 @@ ConnectivityDetector.bind(this, new ConnectivityListener() {
 
 If your Activity or Fragment implements `ConnectivityListener` simply call:
 ```java
-Connectivity detector.bind(this);
+ConnectivityDetector.bind(this);
 ```
 
+- [`ConnectivityAdapter`](simpleconnectivitydetector/src/main/java/com/wildcherryapps/simpleconnectivitydetector/ConnectivityAdapter.java) is a convenience class you can use if you don't need to override all `ConnectivityListener`'s methods.
 
-// TODO: Finish writing README
+
+You can add custom functionality by using `ConnectivityDetector`'s `create()` static method and the various builder methods it provides. For example:
+```java
+ConnectivityDetector.create(this) // "this" references your Activity or Fragment
+        .onNetworkAvailable(backOnline -> {
+            mNoConnectionSnackbar.dismiss();
+            if (backOnline) {
+                Snackbar.make(mRootView, "You are back online!", Snackbar.LENGTH_LONG).show();
+            }
+        })
+        .onNetworkUnavailable(() -> mNoConnectionSnackbar.show())
+        .bind(); // Don't forget to bind after building!
+```
 
 ## License
 
