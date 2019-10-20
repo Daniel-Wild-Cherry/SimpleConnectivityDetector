@@ -1,6 +1,5 @@
 package com.wildcherryapps.simpleconnectivitydetector;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
