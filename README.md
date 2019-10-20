@@ -27,9 +27,11 @@ dependencies {
 }
 ```
 
-`x.y.z` being [![](https://jitpack.io/v/cherrydaniel/SimpleConnectivityDetector.svg)](https://jitpack.io/#cherrydaniel/SimpleConnectivityDetector)
+Replace `x.y.z` with the latest version: [![](https://jitpack.io/v/cherrydaniel/SimpleConnectivityDetector.svg)](https://jitpack.io/#cherrydaniel/SimpleConnectivityDetector)
 
 ## Usage
+
+#### Simple Usage
 
 There are multiple ways to use SimpleConnectivityDetector.
 The most straightforward way is to use the [`ConnectivityDetector`](simpleconnectivitydetector/src/main/java/com/wildcherryapps/simpleconnectivitydetector/ConnectivityDetector.java) `bind()` static method with a [`ConnectivityListener`](simpleconnectivitydetector/src/main/java/com/wildcherryapps/simpleconnectivitydetector/ConnectivityListener.java) callback.
@@ -59,10 +61,13 @@ If your Activity or Fragment implements `ConnectivityListener` simply call:
 ConnectivityDetector.bind(this);
 ```
 
-- [`ConnectivityAdapter`](simpleconnectivitydetector/src/main/java/com/wildcherryapps/simpleconnectivitydetector/ConnectivityAdapter.java) is a convenience class you can use if you don't need to override all `ConnectivityListener`'s methods.
+#### ConnectivityAdapter
 
+[`ConnectivityAdapter`](simpleconnectivitydetector/src/main/java/com/wildcherryapps/simpleconnectivitydetector/ConnectivityAdapter.java) is a convenience class you can use if you don't need to override all `ConnectivityListener`'s methods.
 
-You can add custom functionality by using `ConnectivityDetector`'s `create()` static method and the various builder methods it provides. For example:
+#### Custom Usage
+
+You can easily create custom functionality with lambda functions by using `ConnectivityDetector`'s `create()` static method and the various builder methods it provides. For example:
 ```java
 ConnectivityDetector.create(this) // "this" references your Activity or Fragment
         .onNetworkAvailable(backOnline -> {
@@ -73,6 +78,22 @@ ConnectivityDetector.create(this) // "this" references your Activity or Fragment
         })
         .onNetworkUnavailable(() -> mNoConnectionSnackbar.show())
         .bind(); // Don't forget to bind after building!
+```
+
+Some builder methods for handling network connectivity events:
+- `onNetworkAvailable()`: Called on all devices.
+- `onNetworkAvailableAboveApi24()`: Called on devices with API level 24 and above. Optionally, this callback method can provide a Network object of the available network.
+- `onNetworkAvailableBelowApi24()`: Called on devices with API level lower than 24. Optionally, this callback method can provide a NetworkInfo object of the available network.
+
+All methods you implement will be called in this order when a network becomes available:
+1. `onNetworkAvailable()`
+2. `onNetworkAvailableAboveApi24()` or `onNetworkAvailableBelowApi24`, depending on the user's device
+
+#### Debug
+
+To turn off debug messages from the library, use:
+```java
+ConnectivityDetector.debug = false;
 ```
 
 ## License
