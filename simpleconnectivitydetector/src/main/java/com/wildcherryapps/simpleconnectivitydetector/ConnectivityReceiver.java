@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Implementation for API below 24
  */
-public final class ConnectivityReceiver extends BroadcastReceiver {
+public class ConnectivityReceiver extends BroadcastReceiver {
 
     private static final String TAG = "ConnectivityDetector";
 
