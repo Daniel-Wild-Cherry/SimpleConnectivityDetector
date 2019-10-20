@@ -6,7 +6,6 @@ import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
 import android.os.Build;
-import android.util.Log;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -32,7 +31,7 @@ import static android.content.Context.CONNECTIVITY_SERVICE;
  */
 public final class ConnectivityDetector implements LifecycleObserver {
 
-    private static final String TAG = "ConnectivityDetector";
+    public static boolean debug = true;
 
     private Context mContext;
     private Lifecycle mLifecycle;
@@ -88,13 +87,13 @@ public final class ConnectivityDetector implements LifecycleObserver {
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     void onCreate() {
         if (mMainNetworkCallbackAboveApi24 != null) {
-            Log.d(TAG, "Network callback has already been registered");
+            Utils.log("Network callback has already been registered");
             return;
         }
 
         // Init NetworkCallback for API greater than 24
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Log.d(TAG, "API is GREATER than 24, we're registering a network callback");
+            Utils.log("API is GREATER than 24, we're registering a network callback");
             ConnectivityManager cm = (ConnectivityManager) mContext.getSystemService(CONNECTIVITY_SERVICE);
             if (cm != null)
                 cm.registerDefaultNetworkCallback(
@@ -106,7 +105,7 @@ public final class ConnectivityDetector implements LifecycleObserver {
     void onStart() {
         // Init ConnectivityReceiver for API lower than 24
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            Log.d(TAG, "API is LOWER than 24, we're registering a broadcast receiver");
+            Utils.log("API is LOWER than 24, we're registering a broadcast receiver");
             mContext.registerReceiver(
                     mConnectivityReceiverBelowApi24 = new ConnectivityReceiver(mCallback),
                     new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
@@ -117,7 +116,7 @@ public final class ConnectivityDetector implements LifecycleObserver {
     void onStop() {
         // Destroy ConnectivityReceiver for API lower than 24
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N && mConnectivityReceiverBelowApi24 != null) {
-            Log.d(TAG, "API is LOWER than 24, unregistering broadcast receiver");
+            Utils.log("API is LOWER than 24, unregistering broadcast receiver");
             mContext.unregisterReceiver(mConnectivityReceiverBelowApi24);
             mConnectivityReceiverBelowApi24 = null;
         }
@@ -127,7 +126,7 @@ public final class ConnectivityDetector implements LifecycleObserver {
     void onDestroy() {
         // Destroy this bitch
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && mMainNetworkCallbackAboveApi24 != null) {
-            Log.d(TAG, "API is GREATER than 24, unregistering network callback");
+            Utils.log("API is GREATER than 24, unregistering network callback");
             ConnectivityManager cm = (ConnectivityManager) mContext.getSystemService(CONNECTIVITY_SERVICE);
             if (cm != null)
                 cm.unregisterNetworkCallback(mMainNetworkCallbackAboveApi24);
@@ -135,7 +134,7 @@ public final class ConnectivityDetector implements LifecycleObserver {
         }
 
         mLifecycle.removeObserver(this);
-        Log.d(TAG, "ConnectivityDetector is destroyed");
+        Utils.log("ConnectivityDetector is destroyed");
     }
 
     @FunctionalInterface
@@ -275,6 +274,7 @@ public final class ConnectivityDetector implements LifecycleObserver {
             }
 
         }
+        
     }
 
 }

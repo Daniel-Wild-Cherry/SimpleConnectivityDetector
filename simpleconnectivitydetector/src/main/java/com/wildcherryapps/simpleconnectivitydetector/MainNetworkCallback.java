@@ -3,7 +3,6 @@ package com.wildcherryapps.simpleconnectivitydetector;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.os.Build;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -14,30 +13,28 @@ import androidx.annotation.RequiresApi;
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 final class MainNetworkCallback extends ConnectivityManager.NetworkCallback {
 
-    private static final String TAG = "ConnectivityDetector";
-
-    private final ConnectivityListener mCallback;
+    private final ConnectivityListener mListener;
 
     private boolean mConnected;
 
     MainNetworkCallback(ConnectivityListener listener) {
-        mCallback = listener;
+        mListener = listener;
         mConnected = true;
     }
 
     @Override
     public void onAvailable(@NonNull Network network) {
-        Log.d(TAG, "Network Available");
-        if (mCallback != null)
-            mCallback.onNetworkAvailable(!mConnected, network);
+        Utils.log("Network Available");
+        if (mListener != null)
+            mListener.onNetworkAvailable(!mConnected, network);
         mConnected = true;
     }
 
     @Override
     public void onLost(@NonNull Network network) {
-        Log.d(TAG, "Network Unavailable");
-        if (mCallback != null)
-            mCallback.onNetworkUnavailable();
+        Utils.log("Network Unavailable");
+        if (mListener != null)
+            mListener.onNetworkUnavailable();
         mConnected = false;
     }
 
