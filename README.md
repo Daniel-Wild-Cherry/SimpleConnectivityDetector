@@ -32,34 +32,41 @@ dependencies {
 ## Usage
 
 There are multiple ways to use SimpleConnectivityDetector.
-The most straightforward way is to use the [ConnectivityDetector](simpleconnectivitydetector/src/main/java/com/wildcherryapps/simpleconnectivitydetector/ConnectivityDetector.java) `bind` static method with a [ConnectivityListener](simpleconnectivitydetector/src/main/java/com/wildcherryapps/simpleconnectivitydetector/ConnectivityListener.java) callback.
+The most straightforward way is to use the `[ConnectivityDetector](simpleconnectivitydetector/src/main/java/com/wildcherryapps/simpleconnectivitydetector/ConnectivityDetector.java)` `bind` static method with a `[ConnectivityListener](simpleconnectivitydetector/src/main/java/com/wildcherryapps/simpleconnectivitydetector/ConnectivityListener.java)` callback.
 
-In your Activity's onCreate method:
+In your Activity's or Fragment's onCreate method:
 ```java
 ConnectivityDetector.bind(this, new ConnectivityListener() {
     @Override
     public void onNetworkAvailable(boolean backOnline, Network network) {
-                
+        // Called when the network becomes available on devices with API level 24 and above
     }
 
     @Override
     public void onNetworkAvailable(boolean backOnline, NetworkInfo networkInfo) {
-
+        // Called when the network becomes available on devices with API level lower than 24
     }
 
     @Override
     public void onNetworkUnavailable() {
-
+        // Called when the network becomes unavailable
     }
 });
 ```
+
+If your Activity or Fragment implements `ConnectivityListener` simply call:
+```java
+Connectivity detector.bind(this);
+```
+
+
 // TODO: Finish writing README
 
 ## License
 
 MIT License
 
-Copyright (c) 2019 Daniel-Wild-Cherry
+Copyright (c) 2019 cherrydaniel
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
